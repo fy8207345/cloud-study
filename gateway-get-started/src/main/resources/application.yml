@@ -1,0 +1,34 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: not_exist
+          uri: http://localhost:9994
+          predicates:
+            - Path=/fallbackheaders
+          filters:
+            - FallbackHeaders
+        - id: path_route
+          uri: https://httpbin.org
+          predicates:
+            - Path=/*
+          filters:
+            - FallbackHeaders
+            - AddRequestHeader=X-Request-red, blue
+            - AddRequestParameter=red, blue
+            - AddResponseHeader=X-Response-Red, Green
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_UNIQUE
+            - name: CircuitBreaker
+              args:
+                name: myCircuitBreaker
+                fallbackUri: forward:/resilience4j
+            - MapRequestHeader=Key, Key222
+#            - PrefixPath=/mypath # 请求/hello 转发到 /mypath/hello
+            - PreserveHostHeader
+#            - RedirectTo=302, http://baidu.com
+            - RemoveRequestHeader=X-Request-red
+            - RemoveResponseHeader=X-Response-red
+            - RemoveRequestParameter=red
+            - SecureHeaders
+#            - SetPath=/{segment}
+            - SetRequestHeader=X-Request-red, Blue
