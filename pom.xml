@@ -12,6 +12,7 @@
         <module>gateway-get-started</module>
         <module>gateway-deepin</module>
         <module>hystrix</module>
+        <module>nacos</module>
     </modules>
 
     <dependencyManagement>
